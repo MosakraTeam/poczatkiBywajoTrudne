@@ -4,6 +4,8 @@ local bgaudio = audio.loadSound( "sounds/bg.wav" )
 audio.reserveChannels( 1 )
 audio.setVolume( 1, { channel=1 } )
 
+boomSound = audio.loadSound( "sounds/boom.wav" )
+
 local planeta = display.newImage( "images/planeta.png", 250, 150 )
 
 local przeciwnik = display.newImage( "images/ufo.png", 400, 200 )
@@ -38,6 +40,8 @@ local function onStart()
 end
 
 local function onRestart()
+    audio.play( bgaudio, { channel=1, loops=-1 } )
+    
     planeta.x = 250
     planeta.y = 150
 
@@ -112,6 +116,8 @@ local function ruszajObiektami()
             btnRestart.y = display.actualContentHeight/2
 
             btnRestart:addEventListener( "touch", klikuemRestart )
+            audio.stop( 1 )
+            audio.play(boomSound)
         end
     end
 end
