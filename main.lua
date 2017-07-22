@@ -1,6 +1,8 @@
 display.setStatusBar( display.HiddenStatusBar )
 local tlo = display.newImage( "images/bg.png", display.contentCenterX, display.contentCenterY )
 
+local kierunek = "down"
+
 tlo.width = display.actualContentWidth
 tlo.height = display.actualContentHeight
 
@@ -33,7 +35,26 @@ local function ruszajObiektami()
         przeciwnik.y = math.random( 50, display.actualContentHeight - 50 )
 	end
 
-	
+    if kierunek == "up" then
+        statek.y = statek.y - 2
+    else
+        statek.y = statek.y + 2
+    end
+    
+    if statek.y < 30 then statek.y = 30 end
+    if statek.y > display.actualContentHeight - 30 then statek.y = display.actualContentHeight - 30 end
+
+end
+
+local function ustawKierunek( event )
+
+	if event.phase == "began" or event.phase == "moved" then
+		kierunek = "up"
+	else
+		kierunek = "down"
+	end	
+
 end
 
 Runtime:addEventListener( "enterFrame", ruszajObiektami )
+Runtime:addEventListener( "touch", ustawKierunek )
