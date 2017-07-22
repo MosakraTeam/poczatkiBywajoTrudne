@@ -1,62 +1,112 @@
-display.setStatusBar( display.HiddenStatusBar )
 local tlo = display.newImage( "images/bg.png", display.contentCenterX, display.contentCenterY )
-
-local kierunek = "down"
-
-tlo.width = display.actualContentWidth
-tlo.height = display.actualContentHeight
-
-tlo.fill.effect = "filter.blur"
-
 local planeta = display.newImage( "images/planeta.png", 250, 150 )
-planeta.xScale = 2
-planeta.yScale = 2
 
 local przeciwnik = display.newImage( "images/ufo.png", 400, 200 )
 
 local statek = display.newImage( "images/statek.png", 100, 100 )
 
+local boom
+local btnRestart
+local boomFlag = true
+
+local kierunek = "down"
+
 local w1 = 0.8 * statek.width
 local h1 = 0.8 * statek.height
- 
+
 local w2 = 0.8 * przeciwnik.width
 local h2 = 0.8 * przeciwnik.height
 
+local function onStart()
+    display.setStatusBar( display.HiddenStatusBar )
+    
+
+    tlo.width = display.actualContentWidth
+    tlo.height = display.actualContentHeight
+
+    tlo.fill.effect = "filter.blur"
+
+    planeta.xScale = 2
+    planeta.yScale = 2
+end
+
+local function onRestart()
+    planeta.x = 250
+    planeta.y = 150
+
+    przeciwnik.x = 400
+    przeciwnik.y = 200
+
+    statek.x = 100
+    statek.y = 100
+
+    kierunek = 'down'
+
+    display.remove(boom)
+    display.remove(btnRestart)
+    boomFlag = true
+    print('restart end')
+end
+
+local function klikuemRestart( event )
+
+    if event.phase == "began" then
+        print('restart')
+		onRestart()
+	end	
+
+end
+
 local function ruszajObiektami()
 
-	--planeta
-	
-	planeta.x = planeta.x - 1
-	
-	if planeta.x < - 150 then 
-		planeta.x = display.actualContentWidth + 150 
-	end
+    if boomFlag then
+        --planeta
+        
+        planeta.x = planeta.x - 1
+        
+        if planeta.x < - 150 then 
+            planeta.x = display.actualContentWidth + 150 
+        end
 
-	-- statek przeciwnika
-	
-	przeciwnik.x = przeciwnik.x - 3
-	
-	if przeciwnik.x < - 100 then 
-		przeciwnik.x = display.actualContentWidth + 100 
-        przeciwnik.y = math.random( 50, display.actualContentHeight - 50 )
-	end
+        -- statek przeciwnika
+        
+        przeciwnik.x = przeciwnik.x - 3
+        
+        if przeciwnik.x < - 100 then 
+            przeciwnik.x = display.actualContentWidth + 100 
+            przeciwnik.y = math.random( 50, display.actualContentHeight - 50 )
+        end
 
-    if kierunek == "up" then
-        statek.y = statek.y - 2
-    else
-        statek.y = statek.y + 2
+        if kierunek == "up" then
+            statek.y = statek.y - 2
+        else
+            statek.y = statek.y + 2
+        end
+        
+        if statek.y < 30 then statek.y = 30 end
+        if statek.y > display.actualContentHeight - 30 then statek.y = display.actualContentHeight - 30 end
+
+        -- kolizje
+
+        if ( math.abs( statek.x - przeciwnik.x ) < 0.5 * ( w1 + w2 ) ) and
+        ( math.abs( statek.y - przeciwnik.y ) < 0.5 * ( h1 + h2 ) ) then
+            boomFlag = false;
+            boom = display.newImage( "images/boom.jpg", display.contentCenterX, display.contentCenterY )
+
+            boom.width = display.actualContentWidth
+            boom.height = display.actualContentHeight
+
+            btnRestart = display.newImage( "images/btnRestart.png", display.actualContentWidth/2, display.actualContentHeight/2 )
+
+            btnRestart.xScale = .25
+            btnRestart.yScale = .25
+
+            btnRestart.x = display.actualContentWidth/2 - btnRestart.width/16
+            btnRestart.y = display.actualContentHeight/2
+
+            btnRestart:addEventListener( "touch", klikuemRestart )
+        end
     end
-    
-    if statek.y < 30 then statek.y = 30 end
-    if statek.y > display.actualContentHeight - 30 then statek.y = display.actualContentHeight - 30 end
-
-    -- kolizje
-
-    if ( math.abs( statek.x - przeciwnik.x ) < 0.5 * ( w1 + w2 ) ) and
-    ( math.abs( statek.y - przeciwnik.y ) < 0.5 * ( h1 + h2 ) ) then
-        print( "bum" )
-    end
-
 end
 
 local function ustawKierunek( event )
@@ -68,6 +118,8 @@ local function ustawKierunek( event )
 	end	
 
 end
+
+onStart()
 
 Runtime:addEventListener( "enterFrame", ruszajObiektami )
 Runtime:addEventListener( "touch", ustawKierunek )
