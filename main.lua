@@ -17,6 +17,7 @@ local btnRestart
 local boomFlag = true
 
 local kierunek = "down"
+local timer = 0;
 
 local w1 = 0.8 * statek.width
 local h1 = 0.8 * statek.height
@@ -57,6 +58,13 @@ local function onRestart()
     display.remove(btnRestart)
     boomFlag = true
     print('restart end')
+end
+
+local function sprawdzanieTimera()
+    timer = timer + 1
+    if timer % 60 == 0 then
+        audio.play(boomSound)
+    end
 end
 
 local function klikuemRestart( event )
@@ -136,3 +144,4 @@ onStart()
 
 Runtime:addEventListener( "enterFrame", ruszajObiektami )
 Runtime:addEventListener( "touch", ustawKierunek )
+Runtime:addEventListener( "enterFrame", sprawdzanieTimera)
