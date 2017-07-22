@@ -16,6 +16,12 @@ local przeciwnik = display.newImage( "images/ufo.png", 400, 200 )
 
 local statek = display.newImage( "images/statek.png", 100, 100 )
 
+local w1 = 0.8 * statek.width
+local h1 = 0.8 * statek.height
+ 
+local w2 = 0.8 * przeciwnik.width
+local h2 = 0.8 * przeciwnik.height
+
 local function ruszajObiektami()
 
 	--planeta
@@ -43,6 +49,13 @@ local function ruszajObiektami()
     
     if statek.y < 30 then statek.y = 30 end
     if statek.y > display.actualContentHeight - 30 then statek.y = display.actualContentHeight - 30 end
+
+    -- kolizje
+
+    if ( math.abs( statek.x - przeciwnik.x ) < 0.5 * ( w1 + w2 ) ) and
+    ( math.abs( statek.y - przeciwnik.y ) < 0.5 * ( h1 + h2 ) ) then
+        print( "bum" )
+    end
 
 end
 
