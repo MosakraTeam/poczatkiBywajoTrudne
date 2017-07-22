@@ -87,7 +87,7 @@ local function ruszajObiektami()
             planeta.x = display.actualContentWidth + 150 
         end
 
-        -- statek przeciwnika
+        -- statek przeciwnika test
         
         przeciwnik.x = przeciwnik.x - 3
         
