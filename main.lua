@@ -1,4 +1,9 @@
 local tlo = display.newImage( "images/bg.png", display.contentCenterX, display.contentCenterY )
+
+local bgaudio = audio.loadSound( "sounds/bg.wav" )
+audio.reserveChannels( 1 )
+audio.setVolume( 1, { channel=1 } )
+
 local planeta = display.newImage( "images/planeta.png", 250, 150 )
 
 local przeciwnik = display.newImage( "images/ufo.png", 400, 200 )
@@ -18,6 +23,8 @@ local w2 = 0.8 * przeciwnik.width
 local h2 = 0.8 * przeciwnik.height
 
 local function onStart()
+    audio.play( bgaudio, { channel=1, loops=-1 } )
+
     display.setStatusBar( display.HiddenStatusBar )
     
 
